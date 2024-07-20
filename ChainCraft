@@ -1,0 +1,37 @@
+# scripts/main.py
+
+from web3 import Web3
+from scripts.contract_creation import deploy_contract
+from scripts.transaction_management import track_transaction, get_transaction_details
+from scripts.blockchain_analytics import analyze_blockchain_data
+from utils.blockchain_utils import load_csv, save_csv
+
+def main():
+    # Setup
+    web3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID'))
+    
+    # Smart Contract Creation
+    with open('contracts/SimpleStorage.sol', 'r') as file:
+        contract_source = file.read()
+    private_key = 'YOUR_PRIVATE_KEY'
+    account_address = 'YOUR_ACCOUNT_ADDRESS'
+    address, abi = deploy_contract(web3, contract_source, 'SimpleStorage', private_key, account_address)
+    print(f'Contract deployed at: {address}')
+    
+    # Transaction Management
+    tx_hash = 'YOUR_TRANSACTION_HASH'
+    tx_receipt = track_transaction(web3, tx_hash)
+    tx_details = get_transaction_details(web3, tx_hash)
+    print(f'Transaction Receipt: {tx_receipt}')
+    print(f'Transaction Details: {tx_details}')
+    
+    # Blockchain Analytics
+    df = load_csv('blockchain_data.csv')
+    results_df = analyze_blockchain_data(df)
+    print(f'Analysis Results: {results_df}')
+    
+    # Save results to CSV
+    save_csv(results_df, 'analysis_results.csv')
+
+if __name__ == "__main__":
+    main()
